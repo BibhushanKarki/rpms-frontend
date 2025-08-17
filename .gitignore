@@ -1,0 +1,53 @@
+# Node / Frontend
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# MacOS
+.DS_Store
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+instance/
+*.sqlite3
+
+# Virtual environment
+.venv/
+env/
+venv/
+ENV/
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Docker
+*.pid
+*.sock
+.docker/
+.docker-compose/
+
+# Coverage / Testing
+.coverage
+*.cover
+*.py,cover
+htmlcov/
+.cache/
+
+# Misc
+*.swp
+*.swo

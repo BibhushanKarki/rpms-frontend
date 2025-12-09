@@ -1,38 +1,35 @@
 import { useState } from "react";
-import api from "../api/api";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
-interface LoginProps {
-  onLogin: (token: string, role: string) => void;
+interface RegisterProps {
+  onRegister?: () => void;
 }
 
-export default function Login({ onLogin }: LoginProps) {
+export default function Register({ onRegister }: RegisterProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post("/login", { username, password });
-      const { access_token, role } = res.data;
-
-      // Store credentials
-      localStorage.setItem("token", access_token);
-      localStorage.setItem("role", role);
-
-      onLogin(access_token, role);
-    } catch (err) {
-      setError("❌ Invalid username or password");
+      await axios.post("http://localhost:5050/register", {
+        username,
+        password,
+      });
+      alert("✅ User registered successfully! You can now log in.");
+      if (onRegister) onRegister();
+    } catch (err: any) {
+      setError(err.response?.data?.msg || "Registration failed");
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div className="bg-white shadow p-6 rounded w-96">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+        <h2 className="text-2xl font-bold mb-4">Register</h2>
         {error && <p className="text-red-500 mb-2">{error}</p>}
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
           <input
             className="w-full border p-2 mb-4"
             type="text"
@@ -49,17 +46,11 @@ export default function Login({ onLogin }: LoginProps) {
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded cursor-pointer"
+            className="w-full bg-green-500 text-white p-2 rounded cursor-pointer"
           >
-            Login
+            Register
           </button>
         </form>
-        <p className="mt-4 text-sm">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline">
-            Register here
-          </Link>
-        </p>
       </div>
     </div>
   );

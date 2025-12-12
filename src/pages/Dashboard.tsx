@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import VitalCard from "../components/VitalCard";
 import api from "../api/api";
+import axios from "axios";
 
 interface VitalsData {
   heart_rate: number;
@@ -99,6 +100,21 @@ export default function Dashboard({ token, role, onLogout }: DashboardProps) {
     time: "",
   };
 
+  // Check for authentication errors (expired/invalid token)
+  const isAuthError =
+    (patientsError &&
+      axios.isAxiosError(patientsError) &&
+      patientsError.response?.status === 401) ||
+    (historyError &&
+      axios.isAxiosError(historyError) &&
+      historyError.response?.status === 401);
+
+  if (isAuthError) {
+    // Token is invalid / expired: force logout
+    onLogout();
+    return null; // or a small "Logging out..." message if you like
+  }
+
   if (loadingPatients) {
     return (
       <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 items-center justify-center text-gray-700 dark:text-gray-100">
@@ -106,6 +122,7 @@ export default function Dashboard({ token, role, onLogout }: DashboardProps) {
       </div>
     );
   }
+
   if (patientsError || historyError) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-500">
